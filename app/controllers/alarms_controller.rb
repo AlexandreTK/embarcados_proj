@@ -24,17 +24,37 @@ class AlarmsController < ApplicationController
   # POST /alarms
   # POST /alarms.json
   def create
+    # puts("******PARAMS:")
+    # puts(params)
+    # puts(params[:alarm])
+    # puts(params[:alarm][:from])
+    # #params.has_key?("hour") ? puts(params[:hour]) : puts("no hour")
+
     @alarm = Alarm.new(alarm_params)
 
-    respond_to do |format|
+    #@user_id = params.has_key?("user_id") ? params[:user_id] | current_user.id
+
+    
+
+    if params[:alarm][:from]=='home'
       if @alarm.save
-        format.html { redirect_to @alarm, notice: 'Alarm was successfully created.' }
-        format.json { render :show, status: :created, location: @alarm }
+        redirect_to root_path
       else
-        format.html { render :new }
-        format.json { render json: @alarm.errors, status: :unprocessable_entity }
+        redirect_to root_path
+      end
+    else
+      respond_to do |format|
+        if @alarm.save
+          format.html { redirect_to @alarm, notice: 'Alarm was successfully created.' }
+          format.json { render :show, status: :created, location: @alarm }
+        else
+          format.html { render :new }
+          format.json { render json: @alarm.errors, status: :unprocessable_entity }
+        end
       end
     end
+
+
   end
 
   # PATCH/PUT /alarms/1
@@ -60,7 +80,6 @@ class AlarmsController < ApplicationController
       redirect_to root_path
     else
       respond_to do |format|
-
         format.html { redirect_to alarms_url, notice: 'Alarm was successfully destroyed.' }
         format.json { head :no_content }
       end

@@ -1,9 +1,11 @@
+/*
 @font-face {
   font-family: 'Glyphicons Halflings';
 
   src: url('../fonts/glyphicons-halflings-regular.eot');
   src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
+*/
 .glyphicon {
   position: relative;
   top: 1px;
@@ -16,6 +18,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .glyphicon-asterisk:before {
   content: "\002a";
 }
@@ -143,7 +146,7 @@ p,
 .alarm_header {
   border-bottom: 1px solid #95a5a6;
   color: #95a5a6;
-  margin-left: 4px;
+  margin-left: 30px;
   margin-right: 4px;
 }
 .alarm_title {

@@ -7,25 +7,51 @@
     <body>-->
         <div id="sb-site">
             <p>Alarm Clock</p>
-            <h1 class="title" id="clock">00:00:00</h1>
-        <!--
-            <div id="forecast_label">Waiting for location data...</div>
-            <div class="weather_data">
-              <canvas id="forecast_icon" width="82" height="82" style="width:82px; height: 82px"></canvas>
-              <div class="temp" id="temp"></div>
-              <div class="desc" id="desc"></div>
-            </div>
-            <div id="geolocation_data"></div>
-        
-            <a id="sidebar_toggle" class="sb-toggle-right"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></a>
-		-->
+            <div id="clockdiv">
+            	<h1 class="title" id="clock"><span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span></h1>
+        	</div>
+        	<script>
+        		function initializeClock(id) {
+				var clock = document.getElementById(id);
+				//alert(clock);
+				var hoursSpan = clock.querySelector('.hours');
+				var minutesSpan = clock.querySelector('.minutes');
+				var secondsSpan = clock.querySelector('.seconds');
+
+
+				function updateClock() {
+
+				var t = Date.parse(new Date());
+				var seconds = Math.floor((t / 1000) % 60);
+				var minutes = Math.floor((t / 1000 / 60) % 60);
+				var hours = Math.floor((t / (1000 * 60 * 60)) % 24) - 3;
+
+
+				hoursSpan.innerHTML = ('0' + hours).slice(-2);
+				minutesSpan.innerHTML = ('0' + minutes).slice(-2);
+				secondsSpan.innerHTML = ('0' + seconds).slice(-2);
+
+				if (t.total <= 0) {
+				  clearInterval(timeinterval);
+				}
+				}
+
+				updateClock();
+				var timeinterval = setInterval(updateClock, 1000);
+				}
+
+				initializeClock('clockdiv');
+        	</script>
         </div>
 
         <div id="alarms_content" class="sb-slidebar sb-right sb-style-push sb-width-custom" data-sb-width="100%">
             <div class="row">
             
-              <a id="sidebar_toggle_inner" class="sb-toggle-right"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span></a>
-			
+
+                <%= link_to root_path , method: :get, class: "btn btn-default sb-toggle-right", id:"sidebar_toggle_inner" do %>
+	            	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+	            <% end %>
+
                 <div class="col-xs-12">
                     <div class="row alarm_header">
                         <div class="row">
@@ -38,18 +64,26 @@
 
 
 
-							<div class="col-xs-8 text-left">
+							
 								<!--
                                 <h1 class="alarm_title">
                                 |HOUR| |MIN| new alarm info to add... &nbsp; &nbsp;
                             	</h1>
                             	-->
-                            	<%= form_for Alarm.new do |form| %>
-								  Hour: <%= form.number_field :hour %> | 
-								  Min: <%= form.number_field :min %>
-								  <%= form.submit %>
+								<%= form_for Alarm.new do |form| %>
+									<%= hidden_field_tag "alarm[from]", "home" %>
+									Hour: <%= form.number_field :hour, min: 0, max: 24 %> 
+									Min: <%= form.number_field :min, min: 0, max: 60 %> |
+									M: <%= form.check_box :repeat_monday %> | 
+									T: <%= form.check_box :repeat_tuesday %> | 
+									W: <%= form.check_box :repeat_wednesday %> | 
+									T: <%= form.check_box :repeat_thursday %> | 
+									F: <%= form.check_box :repeat_friday %> | 
+									S: <%= form.check_box :repeat_saturday %> | 
+									S: <%= form.check_box :repeat_sunday %> &nbsp;
+									<%= form.submit %>
 								<% end %>
-                          	</div>
+                          	
                           	<!--
                             <div class="col-xs-4 text-right">
                                 <<button type="button" class="btn btn-default" id="add_alarm_button">Add Alarm</button>
@@ -129,7 +163,11 @@
 	                                    			<%=days_string%>
 	                                    		</td>
 	                                    		<td colspan=1>
-	                                    			<td><%= link_to 'Del', alarm_path(alarm, from:"home") , method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	                                    			<td>
+	                                    				<%= link_to alarm_path(alarm, from:"home") , method: :delete, data: { confirm: 'Are you sure you want to delete this alarm?' }, class: "btn btn-default" do %>
+	                                    						<i class="glyphicon glyphicon-minus"></i>
+	                                    				<% end %>
+	                                    			</td>
 	                                    		</td>
                                     		</tr>
 
