@@ -11,6 +11,7 @@
     </div>
   <% end %>
 
+  </br>
   <div class="field">
     <%= form.label :operation_type %>
     <br/>
@@ -20,18 +21,28 @@
     <%= form.radio_button :operation_type, 'Only Play Song' %> Only Play Song <br />
   </div>
 
+  </br>
   <div class="field">
     <%= form.label :minutes_to_next_action %>
     <br/>
     <%= form.number_field :minutes_to_next_action %>
   </div>
 
+  </br>
   <div class="field">
     <%= form.label :timezone_hours_diff %>
     <br/>
     <%= form.number_field :timezone_hours_diff %>
   </div>
 
+  </br>
+  <div class="field">
+    <%= form.label :mp3, "New MP3 - Current Audio: #{setting.mp3_file_name}" %>
+    <br/>
+    <%= form.file_field :mp3%>
+  </div>
+
+  </br>
   <div class="actions">
     <br/>
     <%= form.submit %>

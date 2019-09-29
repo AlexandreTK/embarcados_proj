@@ -6,4 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Setting.create(operation_type: 'Open Window and Play Song', minutes_to_next_action: 10, timezone_hours_diff: -3)
+mp3_path = "#{Rails.root}/Birds Song.mp3"
+mp3_file = File.new(mp3_path)
+
+Setting.create(operation_type: 'Open Window and Play Song', minutes_to_next_action: 10, timezone_hours_diff: -3, mp3: mp3_file)

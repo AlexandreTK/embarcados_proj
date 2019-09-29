@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_29_181412) do
+ActiveRecord::Schema.define(version: 2019_09_29_201752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,10 @@ ActiveRecord::Schema.define(version: 2019_09_29_181412) do
     t.integer "timezone_hours_diff"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "mp3_file_name"
+    t.string "mp3_content_type"
+    t.bigint "mp3_file_size"
+    t.datetime "mp3_updated_at"
   end
 
 end

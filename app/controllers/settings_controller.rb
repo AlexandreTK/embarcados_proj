@@ -69,6 +69,6 @@ class SettingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def setting_params
-      params.require(:setting).permit(:operation_type, :minutes_to_next_action, :timezone_hours_diff)
+      params.require(:setting).permit(:operation_type, :minutes_to_next_action, :timezone_hours_diff, :mp3)
     end
 end
