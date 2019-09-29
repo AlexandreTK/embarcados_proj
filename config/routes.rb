@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :settings
   #get 'welcome/index'
   root 'welcome#index'
   resources :alarms

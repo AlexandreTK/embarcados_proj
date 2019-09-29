@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Operation type:</strong>
+  <%= @setting.operation_type %>
+</p>
+
+<p>
+  <strong>Minutes to next action:</strong>
+  <%= @setting.minutes_to_next_action %>
+</p>
+
+<p>
+  <strong>Timezone hours diff:</strong>
+  <%= @setting.timezone_hours_diff %>
+</p>
+
+<!-- < %= link_to 'Edit', edit_setting_path(@setting) %> | -->
+<%= link_to 'Go Back', root_path %>

@@ -1,0 +1,39 @@
+<%= form_with(model: setting, local: true) do |form| %>
+  <% if setting.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(setting.errors.count, "error") %> prohibited this setting from being saved:</h2>
+
+      <ul>
+      <% setting.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :operation_type %>
+    <br/>
+    <!--< %= form.text_field :operation_type %>-->
+    <%= form.radio_button :operation_type, 'Open Window and Play Song' %> Open Window and Play Song <br />
+    <%= form.radio_button :operation_type, 'Only Open Window' %> Only Open Window <br />
+    <%= form.radio_button :operation_type, 'Only Play Song' %> Only Play Song <br />
+  </div>
+
+  <div class="field">
+    <%= form.label :minutes_to_next_action %>
+    <br/>
+    <%= form.number_field :minutes_to_next_action %>
+  </div>
+
+  <div class="field">
+    <%= form.label :timezone_hours_diff %>
+    <br/>
+    <%= form.number_field :timezone_hours_diff %>
+  </div>
+
+  <div class="actions">
+    <br/>
+    <%= form.submit %>
+  </div>
+<% end %>

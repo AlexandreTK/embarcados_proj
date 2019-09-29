@@ -48,7 +48,7 @@
             <div class="row">
             
 
-                <%= link_to root_path , method: :get, class: "btn btn-default sb-toggle-right", id:"sidebar_toggle_inner" do %>
+                <%= link_to edit_setting_path(Setting.first) , method: :get, class: "btn btn-default sb-toggle-right", id:"sidebar_toggle_inner" do %>
 	            	<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 	            <% end %>
 

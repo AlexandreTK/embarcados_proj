@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  operation_type: MyString
+  minutes_to_next_action: 1
+  timezone_hours_diff: 1
+
+two:
+  operation_type: MyString
+  minutes_to_next_action: 1
+  timezone_hours_diff: 1
