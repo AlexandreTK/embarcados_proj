@@ -1,2 +1,153 @@
+<!--<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weather Clock</title>
+        <meta name="author" content="Alexander Kavanaugh">
+    </head>
+    <body>-->
+        <div id="sb-site">
+            <p>Alarm Clock</p>
+            <h1 class="title" id="clock">00:00:00</h1>
+        <!--
+            <div id="forecast_label">Waiting for location data...</div>
+            <div class="weather_data">
+              <canvas id="forecast_icon" width="82" height="82" style="width:82px; height: 82px"></canvas>
+              <div class="temp" id="temp"></div>
+              <div class="desc" id="desc"></div>
+            </div>
+            <div id="geolocation_data"></div>
+        
+            <a id="sidebar_toggle" class="sb-toggle-right"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span></a>
+		-->
+        </div>
+
+        <div id="alarms_content" class="sb-slidebar sb-right sb-style-push sb-width-custom" data-sb-width="100%">
+            <div class="row">
+            
+              <a id="sidebar_toggle_inner" class="sb-toggle-right"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span></a>
+			
+                <div class="col-xs-12">
+                    <div class="row alarm_header">
+                        <div class="row">
+                            <div class="col-12">
+                                <h1 class="alarm_title text-center">Alarms</h1>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+
+
+
+							<div class="col-xs-8 text-left">
+								<!--
+                                <h1 class="alarm_title">
+                                |HOUR| |MIN| new alarm info to add... &nbsp; &nbsp;
+                            	</h1>
+                            	-->
+                            	<%= form_for Alarm.new do |form| %>
+								  Hour: <%= form.number_field :hour %> | 
+								  Min: <%= form.number_field :min %>
+								  <%= form.submit %>
+								<% end %>
+                          	</div>
+                          	<!--
+                            <div class="col-xs-4 text-right">
+                                <<button type="button" class="btn btn-default" id="add_alarm_button">Add Alarm</button>
+                          	</div>
+                          -->
+                          	<br/>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3" id="add_alarm" style="display: none;">
+                                <form class="form-inline" name="add_alarm_form" id="add_alarm_form">
+                                    <div class="form-group">
+                                        <label for="alarm_name" class="sr-only">Name</label>
+                                      <input type="text" class="form-control" id="alarm_name" placeholder="Name" required=true />
+                                    </div>
+                                    <div class="form-group">
+                                      <label for="alarm_timepicker" class="sr-only">Time</label>
+                                      <div class='input-group date' id='alarm_timepicker'>
+                                          <input type='text' id="alarm_time" placeholder="Click the clock -->" class="form-control" required=true/>
+                                          <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span>
+                                          </span>
+                                      </div>
+                                    </div>
+                                    <button type="button" class="btn btn-default" onclick="add_alarm($('#alarm_name').val(), $('#alarm_time').val())">Add</button>
+                                    <button type="reset" class="btn btn-default" onclick="$('#add_alarm').slideUp();">Cancel</button>
+                                  </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <table class="table" id="alarm_table">
+                            <tbody>
+                                <tr id="alarm_row">
+                                	<% if @alarms.count == 0 %>
+                                    	<td colspan=4>No Alarms Set</td>
+                                    <% else %>
+                                    	<tr>
+                                    	<th></th>
+                                    	<th>Hour</th>
+                                    	<th>Days of the week</th>
+                                    	<th></th>
+                                    	<tr/>
+                                    	<% @alarms.each do |alarm| %>
+                                			<tr>
+	                                			<% 
+	                                			days_string = "   "
+	                                			if alarm.repeat_monday
+	                                				days_string = days_string + " Mon |"
+	                                			end
+	                                			if alarm.repeat_tuesday
+	                                				days_string = days_string + " Tue |"
+	                                			end
+	                                			if alarm.repeat_wednesday
+	                                				days_string = days_string + " Wed |"
+	                                			end
+	                                			if alarm.repeat_thursday
+	                                				days_string = days_string + " Thu |"
+	                                			end
+	                                			if alarm.repeat_friday
+	                                				days_string = days_string + " Fri |"
+	                                			end
+	                                			if alarm.repeat_saturday
+	                                				days_string = days_string + " Sat |"
+	                                			end
+	                                			if alarm.repeat_sunday
+	                                				days_string = days_string + " Sun |"
+	                                			end
+	                                			%>
+
+	                                			<td colspan=1>
+	                                    			
+	                                    		</td>
+	                                    		<td colspan=1>
+	                                    			<%= alarm.hour.to_s.rjust(2, '0') %>:<%= alarm.min.to_s.rjust(2, '0')%>
+	                                    		</td>
+	                                    		<td colspan=1>
+	                                    			<%=days_string%>
+	                                    		</td>
+	                                    		<td colspan=1>
+	                                    			<td><%= link_to 'Del', alarm_path(alarm, from:"home") , method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	                                    		</td>
+                                    		</tr>
+
+                                    	<% end %>
+                                    <% end %>
+                                </tr>
+                             </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--    </body>
+</html>-->
+
+
+
+<!--
 <h1>Welcome#index</h1>
 <p>Find me in app/views/welcome/index.html.erb</p>
+-->

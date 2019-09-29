@@ -1,3 +1,242 @@
-// Place all the styles related to the Alarms controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-asterisk:before {
+  content: "\002a";
+}
+.glyphicon-plus:before {
+  content: "\002b";
+}
+.glyphicon-euro:before,
+.glyphicon-eur:before {
+  content: "\20ac";
+}
+.glyphicon-minus:before {
+  content: "\2212";
+}
+.glyphicon-cloud:before {
+  content: "\2601";
+}
+.glyphicon-envelope:before {
+  content: "\2709";
+}
+.glyphicon-pencil:before {
+  content: "\270f";
+}
+.glyphicon-glass:before {
+  content: "\e001";
+}
+.glyphicon-music:before {
+  content: "\e002";
+}
+.glyphicon-search:before {
+  content: "\e003";
+}
+.glyphicon-heart:before {
+  content: "\e005";
+}
+
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0e.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UNirkOUuhs.ttf) format('truetype');
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  background-color: #95a5a6;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+#sb-site {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  padding-right: 60px;
+}
+.bootstrap-datetimepicker-widget {
+  background-color: #333333;
+}
+.btn {
+  color: white;
+  background-color: #95a5a6;
+  border-color: #1d1f20;
+}
+.input-group-addon {
+  cursor: pointer;
+}
+#add_alarm {
+  padding-bottom: 10px;
+}
+p {
+  padding: 10px 0;
+}
+p,
+.title {
+  font-weight: bold;
+}
+.table tr {
+  background-color: transparent !important;
+}
+.table td {
+  border-top: none !important;
+}
+.table .delete {
+  color: #df5757;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#alarm_table {
+  color: white;
+}
+
+.form-inline .form-group {
+  display: inline-block;
+  float: left;
+}
+#alarms_content {
+  background-color: #333333;
+  padding: 15px;
+  box-shadow: 0px 0px 5px 5px #222222 inset;
+  x-overflow: hidden;
+  padding-left: 75px;
+}
+#alarm_name {
+  margin-left: 10px;
+}
+#alarm_timepicker {
+  margin-left: 20px;
+}
+#alarm_time {
+  width: 180px;
+}
+.alarm_header {
+  border-bottom: 1px solid #95a5a6;
+  color: #95a5a6;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.alarm_title {
+  text-align: left;
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: bold;
+  padding: 0 0 10px 15px;
+  margin: 0;
+}
+#sidebar_toggle,
+#sidebar_toggle_inner {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #1d1f20;
+  font-size: 40px;
+  color: #95a5a6;
+}
+#sidebar_toggle span,
+#sidebar_toggle_inner span {
+  margin: 10px;
+}
+#sidebar_toggle span:hover,
+#sidebar_toggle_inner span:hover {
+  opacity: 0.8;
+}
+#sidebar_toggle {
+  right: 0;
+}
+#sidebar_toggle_inner {
+  left: 0;
+}
+.weather_data {
+  position: relative;
+  box-sizing: border-box;
+  font-weight: bold;
+}
+#temp {
+  display: inline-block;
+  font-size: 68px;
+  margin-top: 10px;
+}
+#desc {
+  margin-top: 10px;
+  font-size: 20px;
+}
+/* background colors */
+.cold {
+  background-color: #95a5a6 !important;
+}
+.cold_text {
+  color: #95a5a6 !important;
+}
+.cold_line {
+  border-color: #95a5a6 !important;
+}
+.chilly {
+  background-color: #1abc9c !important;
+}
+.chilly_text {
+  color: #1abc9c !important;
+}
+.chilly_line {
+  border-color: #1abc9c !important;
+}
+.nice {
+  background-color: #2980b9 !important;
+}
+.nice_text {
+  color: #2980b9 !important;
+}
+.nice_line {
+  border-color: #2980b9 !important;
+}
+.warm {
+  background-color: #e67e22 !important;
+}
+.warm_text {
+  color: #e67e22 !important;
+}
+.warm_line {
+  border-color: #e67e22 !important;
+}
+.hot {
+  background-color: #e74c3c !important;
+}
+.hot_text {
+  color: #e74c3c !important;
+}
+.hot_line {
+  border-color: #e74c3c !important;
+}
+/* end background colors */
+

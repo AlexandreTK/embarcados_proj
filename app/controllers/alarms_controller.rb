@@ -55,9 +55,15 @@ class AlarmsController < ApplicationController
   # DELETE /alarms/1.json
   def destroy
     @alarm.destroy
-    respond_to do |format|
-      format.html { redirect_to alarms_url, notice: 'Alarm was successfully destroyed.' }
-      format.json { head :no_content }
+
+    if params[:from]=='home'
+      redirect_to root_path
+    else
+      respond_to do |format|
+
+        format.html { redirect_to alarms_url, notice: 'Alarm was successfully destroyed.' }
+        format.json { head :no_content }
+      end
     end
   end
 
