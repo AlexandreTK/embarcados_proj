@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hour: 1
+  min: 1
+  repeat_monday: false
+  repeat_tuesday: false
+  repeat_wednesday: false
+  repeat_thursday: false
+  repeat_friday: false
+  repeat_saturday: false
+  repeat_sunday: false
+
+two:
+  hour: 1
+  min: 1
+  repeat_monday: false
+  repeat_tuesday: false
+  repeat_wednesday: false
+  repeat_thursday: false
+  repeat_friday: false
+  repeat_saturday: false
+  repeat_sunday: false

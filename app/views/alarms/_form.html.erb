@@ -1,0 +1,62 @@
+<%= form_with(model: alarm, local: true) do |form| %>
+  <% if alarm.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(alarm.errors.count, "error") %> prohibited this alarm from being saved:</h2>
+
+      <ul>
+      <% alarm.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :hour %>
+    <%= form.number_field :hour %>
+  </div>
+
+  <div class="field">
+    <%= form.label :min %>
+    <%= form.number_field :min %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_monday %>
+    <%= form.check_box :repeat_monday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_tuesday %>
+    <%= form.check_box :repeat_tuesday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_wednesday %>
+    <%= form.check_box :repeat_wednesday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_thursday %>
+    <%= form.check_box :repeat_thursday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_friday %>
+    <%= form.check_box :repeat_friday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_saturday %>
+    <%= form.check_box :repeat_saturday %>
+  </div>
+
+  <div class="field">
+    <%= form.label :repeat_sunday %>
+    <%= form.check_box :repeat_sunday %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

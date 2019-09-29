@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Hour:</strong>
+  <%= @alarm.hour %>
+</p>
+
+<p>
+  <strong>Min:</strong>
+  <%= @alarm.min %>
+</p>
+
+<p>
+  <strong>Repeat monday:</strong>
+  <%= @alarm.repeat_monday %>
+</p>
+
+<p>
+  <strong>Repeat tuesday:</strong>
+  <%= @alarm.repeat_tuesday %>
+</p>
+
+<p>
+  <strong>Repeat wednesday:</strong>
+  <%= @alarm.repeat_wednesday %>
+</p>
+
+<p>
+  <strong>Repeat thursday:</strong>
+  <%= @alarm.repeat_thursday %>
+</p>
+
+<p>
+  <strong>Repeat friday:</strong>
+  <%= @alarm.repeat_friday %>
+</p>
+
+<p>
+  <strong>Repeat saturday:</strong>
+  <%= @alarm.repeat_saturday %>
+</p>
+
+<p>
+  <strong>Repeat sunday:</strong>
+  <%= @alarm.repeat_sunday %>
+</p>
+
+<%= link_to 'Edit', edit_alarm_path(@alarm) %> |
+<%= link_to 'Back', alarms_path %>
