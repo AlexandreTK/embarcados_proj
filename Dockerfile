@@ -12,7 +12,7 @@ RUN apt-get install -y libxml2-dev libxslt1-dev
 # RUN apt-get install -y libqt4-webkit libqt4-dev xvfb
 
 # for a JS runtime
-# RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
