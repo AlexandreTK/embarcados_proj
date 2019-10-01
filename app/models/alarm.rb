@@ -1,7 +1,7 @@
 class Alarm < ApplicationRecord
 
 
-	def self.should_alarm_go_off
+	def self.should_alarm_go_off(request_url)
 		@setting = Setting.first
 		timezone = @setting.timezone_hours_diff
 		current_time = Time.now.utc + timezone.hours
@@ -66,7 +66,7 @@ class Alarm < ApplicationRecord
 
 		audio_url = nil
 		if (@setting.mp3)
-			audio_url = @setting.mp3.url
+			audio_url = request_url + @setting.mp3.url
 		end
 
 		str_return = str_return + audio_url
