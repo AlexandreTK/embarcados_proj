@@ -7,7 +7,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#ifdef __APPLE__
 static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
+#else
+static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
+#endif
 static const char MUSIC_PLAYER[] = "mplayer";
 
 struct url_data {
@@ -84,7 +88,7 @@ void run_play_song(int play_song_secs, char * song_to_play_path) {
 
 int main(int argc, char* argv[]) {
 	pid_t fork_pid = 0;
-	char* data;
+	char* data = NULL;
 
 	
 	while(1) {
@@ -94,10 +98,14 @@ int main(int argc, char* argv[]) {
 		int play_song_secs;
 		int move_motor_secs;
 		char song_to_play_path[200];
-		if (data) {
-			sscanf(data, "%d,%d,%s", &move_motor_secs, &play_song_secs, song_to_play_path);
-			free(data);
+		if (!data[0]) {
+			fprintf(stderr, "ERROR - no data received\n");
+			sleep(10);
+			continue;
 		}
+		sscanf(data, "%d,%d,%s", &move_motor_secs, &play_song_secs, song_to_play_path);
+		free(data);
+		
 		printf("%d\n", play_song_secs);
 		printf("%d\n", move_motor_secs);
 		printf("%s\n", song_to_play_path);
@@ -115,8 +123,8 @@ int main(int argc, char* argv[]) {
 				run_play_song(play_song_secs, song_to_play_path);
 				return 0;
 			} else {
-				sleep(10);
-				kill(fork_pid, SIGKILL);
+				//sleep(10);
+				//kill(fork_pid, SIGKILL);
 			}
 			
         }
