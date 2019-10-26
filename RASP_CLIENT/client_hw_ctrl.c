@@ -7,12 +7,16 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#define SECONDS_NEXT_REQUEST 5
+static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
+
+static const char MUSIC_PLAYER[] = "mplayer";
 #ifdef __APPLE__
 static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
 #else
 static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
-static const char MUSIC_PLAYER[] = "mplayer";
+
 
 struct url_data {
     size_t size;
@@ -89,25 +93,25 @@ void run_play_song(int play_song_secs, char * song_to_play_path) {
 int main(int argc, char* argv[]) {
 	pid_t fork_pid = 0;
 	char* data = NULL;
-
+    int play_song_secs;
+    int move_motor_secs;
+    char song_to_play_path[200];
 	
 	while(1) {
 		
-		data = handle_url("http://raspberrypi.local:3000/get_alarm");
+		data = handle_url(GET_ALARM_INFO_URL);
 	
-		int play_song_secs;
-		int move_motor_secs;
-		char song_to_play_path[200];
 		if (!data[0]) {
 			fprintf(stderr, "ERROR - no data received\n");
-			sleep(10);
+			sleep(SECONDS_NEXT_REQUEST);
 			continue;
 		}
+
 		sscanf(data, "%d,%d,%s", &move_motor_secs, &play_song_secs, song_to_play_path);
 		free(data);
 		
-		printf("%d\n", play_song_secs);
-		printf("%d\n", move_motor_secs);
+		printf("%d,", play_song_secs);
+		printf("%d,", move_motor_secs);
 		printf("%s\n", song_to_play_path);
 		
 		if (move_motor_secs==-1) {
@@ -129,7 +133,7 @@ int main(int argc, char* argv[]) {
 			
         }
 
-		sleep(10);
+		sleep(SECONDS_NEXT_REQUEST);
 	}
 		return 0;
 }
