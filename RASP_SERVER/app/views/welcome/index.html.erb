@@ -59,6 +59,15 @@
                     <div class="row alarm_header">
                         <div class="row">
                             <div class="col-12">
+                                <h4>
+                                    </br>
+                                    <%= form_for AlarmAction.new do |form| %>
+                                        <%= hidden_field_tag "alarm_action[from]", "home" %>
+                                        <%= hidden_field_tag "alarm_action[disable_alarm]", true %>
+                                        <%= form.submit "Stop Alarm" %>
+                                    <% end %>
+                                    </br>
+                                </h4>
                                 <h1 class="alarm_title text-center">Alarms</h1>
                             </div>
                             <br/>

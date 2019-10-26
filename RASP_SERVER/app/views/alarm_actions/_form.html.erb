@@ -1,0 +1,22 @@
+<%= form_with(model: alarm_action, local: true) do |form| %>
+  <% if alarm_action.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(alarm_action.errors.count, "error") %> prohibited this alarm_action from being saved:</h2>
+
+      <ul>
+      <% alarm_action.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :disable_alarm %>
+    <%= form.check_box :disable_alarm %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

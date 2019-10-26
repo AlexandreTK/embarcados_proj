@@ -8,7 +8,8 @@
 #include <sys/wait.h>
 
 #define SECONDS_NEXT_REQUEST 5
-static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
+//static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
+static char GET_ALARM_INFO_URL[] = "http://localhost:3000/get_alarm";
 
 static const char MUSIC_PLAYER[] = "mplayer";
 #ifdef __APPLE__
@@ -119,18 +120,17 @@ int main(int argc, char* argv[]) {
 		} else {
 			//alarm(move_motor_secs);
 		}
-        if (play_song_secs==-1) {
-            // Do nothing
-        } else {
+        if (play_song_secs >= 0) {
 			fork_pid = fork();
 			if (fork_pid == 0) {
 				run_play_song(play_song_secs, song_to_play_path);
 				return 0;
-			} else {
-				//sleep(10);
-				//kill(fork_pid, SIGKILL);
 			}
-			
+		} else {
+			if (play_song_secs==-2) {
+				//printf("Stopping alarm\n");
+				kill(fork_pid, SIGKILL);
+			}
         }
 
 		sleep(SECONDS_NEXT_REQUEST);

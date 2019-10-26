@@ -55,18 +55,42 @@ class Alarm < ApplicationRecord
 		if alarm_should_go_off
 			if (@setting.operation_type == "Open Window and Play Song")
 				str_return = "1,"+(@setting.minutes_to_next_action*60).to_s+","
+
+				@last_action = AlarmAction.last
+				if (@last_action)
+					@last_action.disable_alarm = false
+					@last_action.save
+				end
 			end
 			if (@setting.operation_type == "Only Open Window")
 				str_return = "1,-1,"
 			end
 			if (@setting.operation_type == "Only Play Song")
 				str_return = "-1,1,"
+
+				@last_action = AlarmAction.last
+				if (@last_action)
+					@last_action.disable_alarm = false
+					@last_action.save
+				end
 			end
 		end
 
 		audio_url = nil
 		if (@setting.mp3)
 			audio_url = request_url + @setting.mp3.url
+		end
+
+		if (str_return == "-1,-1,")
+			@last_action = AlarmAction.last
+			if (@last_action)
+
+				disable_alarm = @last_action.disable_alarm
+				if (disable_alarm)
+					@last_action.destroy
+					str_return = "-1,-2,"
+				end
+			end
 		end
 
 		str_return = str_return + audio_url

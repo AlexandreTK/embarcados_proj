@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Disable alarm:</strong>
+  <%= @alarm_action.disable_alarm %>
+</p>
+
+<%= link_to 'Edit', edit_alarm_action_path(@alarm_action) %> |
+<%= link_to 'Back', alarm_actions_path %>

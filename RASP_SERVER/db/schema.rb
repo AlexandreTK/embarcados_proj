@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_29_201752) do
+ActiveRecord::Schema.define(version: 2019_10_26_220801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "actions", force: :cascade do |t|
+    t.boolean "disable_alarm"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "alarm_actions", force: :cascade do |t|
+    t.boolean "disable_alarm"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "alarms", force: :cascade do |t|
     t.integer "hour"
