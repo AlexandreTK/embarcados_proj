@@ -6,6 +6,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pthread.h>
 
 #define SECONDS_NEXT_REQUEST 5
 //static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
@@ -18,6 +19,13 @@ static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
 static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
 
+/*
+void  SIGINT_handler(int sig)
+{
+	printf("Exit from SIGINT\n");
+	exit(0);
+}
+*/
 
 struct url_data {
     size_t size;
@@ -34,7 +42,7 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, struct url_data *data) {
 #ifdef DEBUG
     fprintf(stderr, "data at %p size=%ld nmemb=%ld\n", ptr, size, nmemb);
 #endif
-    tmp = realloc(data->data, data->size + 1); /* +1 for '\0' */
+    tmp = realloc(data->data, data->size + 1);
 
     if(tmp) {
         data->data = tmp;
@@ -84,20 +92,31 @@ char *handle_url(char* url) {
     return data.data;
 }
 
-void run_play_song(int play_song_secs, char * song_to_play_path) {
-	sleep(play_song_secs);
+void * run_motor(void *voidData) {
+	printf("RUNNING MOTOR 1\n");
+	sleep(2);
+	printf("RUNNING MOTOR 2\n");
+	sleep(2);
+	printf("RUNNING MOTOR 3\n");
+	sleep(2);
 
-	//system(song_to_play_cmd);
-	execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
+	return NULL;
 }
 
 int main(int argc, char* argv[]) {
-	pid_t fork_pid = 0;
+	pid_t fork_song_pid = 0;
+	pthread_t thread_motor;
 	char* data = NULL;
     int play_song_secs;
     int move_motor_secs;
     char song_to_play_path[200];
 	
+	/*
+	if (signal(SIGINT, SIGINT_handler) == SIG_ERR) {
+          printf("SIGINT install error\n");
+          exit(1);
+     }*/
+
 	while(1) {
 		
 		data = handle_url(GET_ALARM_INFO_URL);
@@ -115,25 +134,35 @@ int main(int argc, char* argv[]) {
 		printf("%d,", move_motor_secs);
 		printf("%s\n", song_to_play_path);
 		
-		if (move_motor_secs==-1) {
-			// Do nothing
-		} else {
-			//alarm(move_motor_secs);
+		if (move_motor_secs>=0) {
+			if (pthread_create(&thread_motor, NULL, run_motor, NULL)) {
+				fprintf(stderr, "An error occured while creating new thread");
+				return 1;
+			}
 		}
+
         if (play_song_secs >= 0) {
-			fork_pid = fork();
-			if (fork_pid == 0) {
-				run_play_song(play_song_secs, song_to_play_path);
+			fork_song_pid = fork();
+			if (fork_song_pid == 0) {
+				sleep(play_song_secs);
+				execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
 				return 0;
 			}
 		} else {
-			if (play_song_secs==-2) {
+			if ((play_song_secs==-2) && (fork_song_pid!=0)) {
 				//printf("Stopping alarm\n");
-				kill(fork_pid, SIGKILL);
+				if (kill(fork_song_pid,0) == 0) {
+					kill(fork_song_pid, SIGINT);
+					fork_song_pid = 0;
+				} else {
+					fprintf(stderr, "pid do not exists");
+				}
 			}
         }
 
 		sleep(SECONDS_NEXT_REQUEST);
 	}
+
+		//pthread_join(thread_motor, NULL);
 		return 0;
 }
