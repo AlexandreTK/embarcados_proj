@@ -28,7 +28,7 @@ class Alarm < ApplicationRecord
 		if (current_time.wday == 6)
 			week_day_string = "repeat_saturday"
 		end
-		if (current_time.wday == 7)
+		if (current_time.wday == 0)
 			week_day_string = "repeat_sunday"
 		end
 
