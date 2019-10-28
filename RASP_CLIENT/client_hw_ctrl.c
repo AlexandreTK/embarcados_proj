@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include <wiringPi.h>
+
 
 #define SECONDS_NEXT_REQUEST 5
 //static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
@@ -93,12 +95,11 @@ char *handle_url(char* url) {
 }
 
 void * run_motor(void *voidData) {
-	printf("RUNNING MOTOR 1\n");
-	sleep(2);
-	printf("RUNNING MOTOR 2\n");
-	sleep(2);
-	printf("RUNNING MOTOR 3\n");
-	sleep(2);
+	digitalWrite(0, LOW);
+	digitalWrite(2, HIGH);
+	sleep(5);
+	digitalWrite(0, HIGH);
+	digitalWrite(2, HIGH);
 
 	return NULL;
 }
@@ -107,15 +108,20 @@ int main(int argc, char* argv[]) {
 	pid_t fork_song_pid = 0;
 	pthread_t thread_motor;
 	char* data = NULL;
-    int play_song_secs;
-    int move_motor_secs;
-    char song_to_play_path[200];
+    	int play_song_secs;
+    	int move_motor_secs;
+    	char song_to_play_path[200];
 	
+	wiringPiSetup();
+	pinMode(0, OUTPUT);
+	pinMode(2, OUTPUT);
+	digitalWrite(0, HIGH);
+	digitalWrite(2, HIGH);
 	/*
 	if (signal(SIGINT, SIGINT_handler) == SIG_ERR) {
           printf("SIGINT install error\n");
           exit(1);
-     }*/
+     	}*/
 
 	while(1) {
 		
