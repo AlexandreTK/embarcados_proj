@@ -10,7 +10,7 @@
 #include <wiringPi.h>
 
 
-#define SECONDS_NEXT_REQUEST 5
+#define SECONDS_NEXT_REQUEST 2
 //static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
 static char GET_ALARM_INFO_URL[] = "http://localhost:3000/get_alarm";
 
@@ -20,6 +20,12 @@ static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
 #else
 static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
+
+
+#define RELAY_1 0
+#define RELAY_2 2
+#define RELAY_ENABLE  HIGH
+#define RELAY_DISABLE LOW
 
 /*
 void  SIGINT_handler(int sig)
@@ -95,11 +101,11 @@ char *handle_url(char* url) {
 }
 
 void * run_motor(void *voidData) {
-	digitalWrite(0, LOW);
-	digitalWrite(2, HIGH);
-	sleep(5);
-	digitalWrite(0, HIGH);
-	digitalWrite(2, HIGH);
+	digitalWrite(RELAY_1, RELAY_ENABLE);
+	digitalWrite(RELAY_2, RELAY_DISABLE);
+	sleep(10);
+	digitalWrite(RELAY_1, RELAY_DISABLE);
+	digitalWrite(RELAY_1, RELAY_DISABLE);
 
 	return NULL;
 }
@@ -113,10 +119,10 @@ int main(int argc, char* argv[]) {
     	char song_to_play_path[200];
 	
 	wiringPiSetup();
-	pinMode(0, OUTPUT);
-	pinMode(2, OUTPUT);
-	digitalWrite(0, HIGH);
-	digitalWrite(2, HIGH);
+	pinMode(RELAY_1, OUTPUT);
+	pinMode(RELAY_2, OUTPUT);
+	digitalWrite(RELAY_1, RELAY_DISABLE);
+	digitalWrite(RELAY_2, RELAY_DISABLE);
 	/*
 	if (signal(SIGINT, SIGINT_handler) == SIG_ERR) {
           printf("SIGINT install error\n");
@@ -136,9 +142,9 @@ int main(int argc, char* argv[]) {
 		sscanf(data, "%d,%d,%s", &move_motor_secs, &play_song_secs, song_to_play_path);
 		free(data);
 		
-		printf("%d,", play_song_secs);
-		printf("%d,", move_motor_secs);
-		printf("%s\n", song_to_play_path);
+		//printf("%d,", play_song_secs);
+		//printf("%d,", move_motor_secs);
+		//printf("%s\n", song_to_play_path);
 		
 		if (move_motor_secs>=0) {
 			if (pthread_create(&thread_motor, NULL, run_motor, NULL)) {
