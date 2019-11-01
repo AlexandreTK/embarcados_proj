@@ -8,8 +8,13 @@
 #include <sys/wait.h>
 #include <pthread.h>
 #include <wiringPi.h>
+#include <stdbool.h> 
+#include <time.h> 
+#include <sys/time.h>
 
 
+
+//************* SERVER DEFINITION ***************
 #define SECONDS_NEXT_REQUEST 2
 //static char GET_ALARM_INFO_URL[] = "http://raspberrypi.local:3000/get_alarm";
 static char GET_ALARM_INFO_URL[] = "http://localhost:3000/get_alarm";
@@ -21,11 +26,26 @@ static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
 static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
 
+pid_t fork_song_pid = 0;
+//*******************************************
 
+
+//************* MOTOR DEFINITION ***************
 #define RELAY_1 2
 #define RELAY_2 3
 #define RELAY_ENABLE  HIGH
 #define RELAY_DISABLE LOW
+//*******************************************
+
+
+//************* IR DEFINITION ***************
+#define ERROR 0xFE
+#define PIN_IR 0 //GPIO17 WPI_PIN0
+
+#define FULL_CYCLE_USEC 110000
+#define SLEEP_USEC 10
+//*******************************************
+
 
 /*
 void  SIGINT_handler(int sig)
@@ -35,6 +55,7 @@ void  SIGINT_handler(int sig)
 }
 */
 
+//************* SERVER CODE ***************
 struct url_data {
     size_t size;
     char* data;
@@ -99,7 +120,11 @@ char *handle_url(char* url) {
     }
     return data.data;
 }
+//*******************************************
 
+
+
+//************* MOTOR CODE ***************
 void * run_motor(void *voidData) {
 	digitalWrite(RELAY_1, RELAY_ENABLE);
 	digitalWrite(RELAY_2, RELAY_DISABLE);
@@ -109,20 +134,171 @@ void * run_motor(void *voidData) {
 
 	return NULL;
 }
+//*******************************************
+
+
+
+
+
+//************* IR CODE ***************
+long getMicrotime(){
+	struct timeval currentTime;
+	gettimeofday(&currentTime, NULL);
+	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+}
+
+bool IRStart() {
+	long timeRisingEdge = 0;
+	long timeFallingEdge[2] = {0, 0};
+	long timeSpan[2] = {0, 0};
+	// Start signal is composed with a 9 ms leading space and a 4.5 ms pulse.
+
+	while(digitalRead(PIN_IR) == 1) {
+		usleep(SLEEP_USEC);
+	}
+	timeFallingEdge[0] = getMicrotime();
+	while(digitalRead(PIN_IR) == 0) {
+		usleep(SLEEP_USEC);
+	}
+	timeRisingEdge = getMicrotime();
+	while(digitalRead(PIN_IR) == 1) {
+		usleep(SLEEP_USEC);
+	}
+	timeFallingEdge[1] = getMicrotime();
+
+	timeSpan[0] =  timeRisingEdge - timeFallingEdge[0];
+	timeSpan[1] =  timeFallingEdge[1] - timeRisingEdge;
+
+	if ((timeSpan[0] > 8500) && (timeSpan[0] < 9500) &&  (timeSpan[1] > 4000) && (timeSpan[1] < 5000) ) {
+		return true;
+	} else {
+		return false;
+	}
+
+	//return false;
+}
+
+char getByte() {
+	char byte = 0;
+	long timeRisingEdge = 0;
+	long timeFallingEdge = 0;
+	long timeSpan = 0;
+    	// Logic '0' == 0.56 ms LOW and 0.56 ms HIGH
+    	// Logic '1' == 0.56 ms LOW and 0.169 ms HIGH
+	int i;
+	for(i=0; i<8; i++) {
+
+		while(digitalRead(PIN_IR) == 0) {
+			usleep(SLEEP_USEC);
+		}
+		timeRisingEdge = getMicrotime();
+
+		while(digitalRead(PIN_IR) == 1) {
+			usleep(SLEEP_USEC);
+		}
+		timeFallingEdge = getMicrotime();
+
+		timeSpan = timeFallingEdge - timeRisingEdge;
+
+		if ((timeSpan > 1600) && (timeSpan < 1800)) {
+			byte |= 1 << i;
+		}
+	}
+	return byte;
+}
+
+char getKey() {
+	char bytes[4]= {0, 0, 0, 0};
+	// bytes[0] -> ADDRESS
+	// bytes[1] -> LOGICAL INVERSE OF ADDRESS
+	// bytes[2] -> COMMAND
+	// bytes[3] -> LOGICAL INVERSE OF COMMAND
+	if (IRStart() == false) {
+		usleep(FULL_CYCLE_USEC); // One message frame lasts 108 ms.
+		return ERROR;
+	} else {
+		int i;
+		for(i=0; i<4; i++) {
+			bytes[i] = getByte();
+		}
+		if ((bytes[0]+bytes[1]==0xFF) && (bytes[2]+bytes[3]==0xFF)) {
+			return bytes[2];
+		} else {
+			return ERROR;
+		}
+	}
+}
+
+void * run_infrared(void *voidData) {
+	char key;
+	while(1) {
+		key = getKey();
+		//printf("Raw %x\n", key);
+
+		if(key != ERROR) {
+			printf("%x\n", key);
+		}
+		if(key == 0x44) {
+			digitalWrite(RELAY_2, RELAY_DISABLE);
+			digitalWrite(RELAY_1, RELAY_ENABLE);
+		}
+		if(key == 0x40) {
+			digitalWrite(RELAY_1, RELAY_DISABLE);
+			digitalWrite(RELAY_2, RELAY_ENABLE);
+		}
+		if(key == 0x43) {
+			digitalWrite(RELAY_1, RELAY_DISABLE);
+			digitalWrite(RELAY_2, RELAY_DISABLE);
+		}
+		if(key == 0x47) {
+			if ((fork_song_pid!=0)) {
+				//printf("Stopping alarm\n");
+				if (kill(fork_song_pid,0) == 0) {
+					kill(fork_song_pid, SIGINT);
+					fork_song_pid = 0;
+				} else {
+					fprintf(stderr, "pid do not exists");
+				}
+			}
+		}
+	}
+	return NULL;
+}
+//*************************************
+
+
 
 int main(int argc, char* argv[]) {
-	pid_t fork_song_pid = 0;
-	pthread_t thread_motor;
+	// SERVER
+	//pid_t fork_song_pid = 0;
 	char* data = NULL;
     	int play_song_secs;
     	int move_motor_secs;
     	char song_to_play_path[200];
+	// MOTOR
+	pthread_t thread_motor;
+	// INFRARED
+	pthread_t thread_infrared;
+	//char key;
 	
+	
+
 	wiringPiSetup();
+	// MOTOR
 	pinMode(RELAY_1, OUTPUT);
 	pinMode(RELAY_2, OUTPUT);
 	digitalWrite(RELAY_1, RELAY_DISABLE);
 	digitalWrite(RELAY_2, RELAY_DISABLE);
+	// INFRARED
+	pinMode(PIN_IR, INPUT);
+	pinMode(PIN_IR, PUD_UP);
+
+
+	if (pthread_create(&thread_infrared, NULL, run_infrared, NULL)) {
+		fprintf(stderr, "An error occured while creating new thread");
+		return 1;
+	}
+
 	/*
 	if (signal(SIGINT, SIGINT_handler) == SIG_ERR) {
           printf("SIGINT install error\n");
