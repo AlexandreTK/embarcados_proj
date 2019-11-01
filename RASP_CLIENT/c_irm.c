@@ -30,14 +30,59 @@ long getMicrotime(){
 
 void unblock_execution_falling() {
 	blocked_execution_falling = false;
+	//printf("UNBLOCKING FALL\n");
+	//system ("/usr/local/bin/gpio edge pin none") ;
+	return;
 }
 void unblock_execution_rising() {
 	blocked_execution_rising = false;
+	return;
 }
 
 
 bool IRStart() {
-	return false;
+	long timeRisingEdge = 0;
+	long timeFallingEdge[2] = {0, 0};
+	long timeSpan[2] = {0, 0};
+	
+
+	blocked_execution_falling = true;		
+	//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+	while(blocked_execution_falling) {
+		usleep(1);
+	}
+	blocked_execution_falling = true;
+	timeFallingEdge[0] = getMicrotime();
+	printf("fall\n");
+
+	blocked_execution_rising = true;
+	//wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+	while(blocked_execution_rising) {
+		usleep(1);
+	}
+	blocked_execution_rising = true;
+	timeRisingEdge = getMicrotime();
+	printf("rise\n");
+
+	blocked_execution_falling = true;		
+	//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+	while(blocked_execution_falling) {
+		usleep(1);
+	}
+	blocked_execution_falling = true;
+	timeFallingEdge[1] = getMicrotime();
+	printf("fall2");
+
+	timeSpan[0] =  timeRisingEdge - timeFallingEdge[0];
+	timeSpan[1] =  timeFallingEdge[1] - timeRisingEdge;
+
+	if ((timeSpan[0] > 8500) && (timeSpan[0] < 9500) &&  (timeSpan[1] > 4000) && (timeSpan[1] < 5000) ) {
+		return true;
+	} else {
+		return false;
+	}
+
+	//return false;
 }
 
 char getByte() {
@@ -50,7 +95,7 @@ char getByte() {
 	int i;
 	for(i=0; i<8; i++) {
 		blocked_execution_rising = true;
-		wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+		//wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
 		while(blocked_execution_rising) {
 			usleep(1);
 		}
@@ -58,7 +103,7 @@ char getByte() {
 		timeRisingEdge = getMicrotime();
 		
 		blocked_execution_falling = true;		
-		wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+		//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
 		while(blocked_execution_falling) {
 			usleep(1);
 		}
@@ -99,24 +144,28 @@ char getKey() {
 
 
 
-
 int main(int argc, char* argv[]) {
 	char key;
 
-	printf("IRM Test Start ...");
+	printf("IRM Test Start ...\n");
 
 	wiringPiSetup();
 	
 	pinMode(PIN_IR, INPUT);
 	pinMode(PIN_IR, PUD_UP);
 
+	wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+	wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+
+
 	while(1) {
 		key = getKey();
+		printf("Raw %x\n", key);
+
 		if(key != ERROR) {
-			printf("%x", key);
+			printf("%x\n", key);
 		}
 		
 	}
-	
 	return 0;
 }
