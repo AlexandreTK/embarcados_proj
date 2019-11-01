@@ -16,8 +16,6 @@
 #define ERROR 0xFE
 #define PIN_IR 0 //GPIO17 WPI_PIN0
 
-#define FULL_CYCLE_USEC 110000
-#define SLEEP_USEC 10
 
 bool blocked_execution_falling = true;
 bool blocked_execution_rising = true;
@@ -29,23 +27,60 @@ long getMicrotime(){
 	gettimeofday(&currentTime, NULL);
 	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
 }
+/*
+void unblock_execution_falling() {
+	blocked_execution_falling = false;
+	//printf("UNBLOCKING FALL\n");
+	//system ("/usr/local/bin/gpio edge pin none") ;
+	return;
+}
+void unblock_execution_rising() {
+	blocked_execution_rising = false;
+	return;
+}
+*/
 
 bool IRStart() {
 	long timeRisingEdge = 0;
 	long timeFallingEdge[2] = {0, 0};
 	long timeSpan[2] = {0, 0};
-	// Start signal is composed with a 9 ms leading space and a 4.5 ms pulse.
 	
+/*
+	blocked_execution_falling = true;		
+	//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+	while(blocked_execution_falling) {
+		usleep(1);
+	}
+	blocked_execution_falling = true;
+*/	
 	while(digitalRead(PIN_IR) == 1) {
-		usleep(SLEEP_USEC);
+		usleep(5);
 	}
 	timeFallingEdge[0] = getMicrotime();
+	//printf("fall\n");
+/*
+	blocked_execution_rising = true;
+	//wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+	while(blocked_execution_rising) {
+		usleep(1);
+	}
+	blocked_execution_rising = true;
+*/
 	while(digitalRead(PIN_IR) == 0) {
-		usleep(SLEEP_USEC);
+		usleep(5);
 	}
 	timeRisingEdge = getMicrotime();
+	//printf("rise\n");
+/*
+	blocked_execution_falling = true;		
+	//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+	while(blocked_execution_falling) {
+		usleep(1);
+	}
+	blocked_execution_falling = true;
+*/
 	while(digitalRead(PIN_IR) == 1) {
-		usleep(SLEEP_USEC);
+		usleep(5);
 	}
 	timeFallingEdge[1] = getMicrotime();
 
@@ -66,18 +101,32 @@ char getByte() {
 	long timeRisingEdge = 0;
 	long timeFallingEdge = 0;
 	long timeSpan = 0;
-    	// Logic '0' == 0.56 ms LOW and 0.56 ms HIGH
-    	// Logic '1' == 0.56 ms LOW and 0.169 ms HIGH
+	// Comment...
+	
 	int i;
 	for(i=0; i<8; i++) {
-		
+		/*
+		blocked_execution_rising = true;
+		//wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+		while(blocked_execution_rising) {
+			usleep(1);
+		}
+		blocked_execution_rising = true;
+		*/
 		while(digitalRead(PIN_IR) == 0) {
-			usleep(SLEEP_USEC);
+			usleep(5);
 		}
 		timeRisingEdge = getMicrotime();
-		
+		/*
+		blocked_execution_falling = true;		
+		//wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+		while(blocked_execution_falling) {
+			usleep(1);
+		}
+		blocked_execution_falling = true;
+		*/
 		while(digitalRead(PIN_IR) == 1) {
-			usleep(SLEEP_USEC);
+			usleep(5);
 		}
 		timeFallingEdge = getMicrotime();
 		
@@ -92,12 +141,12 @@ char getByte() {
 
 char getKey() {
 	char bytes[4]= {0, 0, 0, 0};
-	// bytes[0] -> ADDRESS
-	// bytes[1] -> LOGICAL INVERSE OF ADDRESS
-	// bytes[2] -> COMMAND
-	// bytes[3] -> LOGICAL INVERSE OF COMMAND
+	// 0 -> ADDRESS
+	// 1 -> LOGICAL INVERSE OF ADDRESS
+	// 2 -> COMMAND
+	// 3 -> LOGICAL INVERSE OF COMMAND
 	if (IRStart() == false) {
-		usleep(FULL_CYCLE_USEC); // One message frame lasts 108 ms.
+		usleep(110000);
 		return ERROR;
 	} else {
 		int i;
@@ -124,10 +173,14 @@ int main(int argc, char* argv[]) {
 	
 	pinMode(PIN_IR, INPUT);
 	pinMode(PIN_IR, PUD_UP);
+/*
+	wiringPiISR(PIN_IR, INT_EDGE_RISING, &unblock_execution_rising);
+	wiringPiISR(PIN_IR, INT_EDGE_FALLING, &unblock_execution_falling);
+*/
 
 	while(1) {
 		key = getKey();
-		//printf("Raw %x\n", key);
+		printf("Raw %x\n", key);
 
 		if(key != ERROR) {
 			printf("%x\n", key);
