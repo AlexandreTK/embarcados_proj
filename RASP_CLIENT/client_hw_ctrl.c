@@ -22,8 +22,8 @@ static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
 
 
-#define RELAY_1 0
-#define RELAY_2 2
+#define RELAY_1 2
+#define RELAY_2 3
 #define RELAY_ENABLE  HIGH
 #define RELAY_DISABLE LOW
 
