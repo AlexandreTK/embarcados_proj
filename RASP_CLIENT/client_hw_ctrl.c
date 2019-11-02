@@ -261,6 +261,15 @@ void * run_infrared(void *voidData) {
 				}
 			}
 		}
+		if (key == 0x07) {
+			system("amixer set PCM,0 $(expr $(amixer get PCM | grep -o [0-9]*% | sed 's/%//') - 5)%");
+			system("( speaker-test -t sine -c 2 -s 2 -f 800 & TASK_PID=$! ; sleep 0.09 ; kill -s 2 $TASK_PID ) > /dev/null");
+		}
+
+		if (key == 0x15) {
+			system("amixer set PCM,0 $(expr $(amixer get PCM | grep -o [0-9]*% | sed 's/%//') + 5)%");
+			system("( speaker-test -t sine -c 2 -s 2 -f 800 & TASK_PID=$! ; sleep 0.09 ; kill -s 2 $TASK_PID ) > /dev/null");
+		}	
 	}
 	return NULL;
 }
