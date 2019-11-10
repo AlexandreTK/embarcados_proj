@@ -32,6 +32,7 @@ pid_t fork_song_pid = 0;
 //*******************************************
 #define CANCEL_SONG -2
 #define PLAY_REMINDER -10
+#define NEXT_ALARM_DELAY 5
 
 
 //************* MOTOR DEFINITION ***************
@@ -377,7 +378,7 @@ int main(int argc, char* argv[]) {
 				while(true) {
 					system(song_to_play_command);
 
-					sleep(5);
+					sleep(NEXT_ALARM_DELAY);
 				}
 
 				return 0;
@@ -408,7 +409,7 @@ int main(int argc, char* argv[]) {
 				while(true) {
 					system(song_to_play_command);
 
-					sleep(30);
+					sleep(NEXT_ALARM_DELAY);
 				}
 
 				
