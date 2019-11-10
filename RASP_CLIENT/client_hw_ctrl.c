@@ -265,7 +265,10 @@ void * run_infrared(void *voidData) {
 				fprintf(stderr, "Stopping alarm pid %d from IR\n", fork_song_pid);
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
-					kill(fork_song_pid, SIGINT);
+					while( kill(fork_song_pid, SIGINT) != 0 ) {
+						fprintf(stderr, "error to kill\n");
+						sleep(2);
+					}
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -366,7 +369,10 @@ int main(int argc, char* argv[]) {
 			if (fork_song_pid!=0) {
 				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
-					kill(fork_song_pid, SIGINT);
+					while( kill(fork_song_pid, SIGINT) != 0 ) {
+						fprintf(stderr, "error to kill\n");
+						sleep(2);
+					}
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -402,7 +408,10 @@ int main(int argc, char* argv[]) {
 			if (fork_song_pid!=0) {
 				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
-					kill(fork_song_pid, SIGINT);
+					while( kill(fork_song_pid, SIGINT) != 0 ) {
+						fprintf(stderr, "error to kill\n");
+						sleep(2);
+					}
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -438,7 +447,10 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr, "Stopping alarm pid %d from SERVER\n", fork_song_pid);
 
 			if (kill(fork_song_pid,0) == 0) {
-				kill(fork_song_pid, SIGINT);
+				while( kill(fork_song_pid, SIGINT) != 0 ) {
+						fprintf(stderr, "error to kill\n");
+						sleep(2);
+					}
 				fork_song_pid = 0;
 			} else {
 				fprintf(stderr, "pid do not exists");
