@@ -255,7 +255,7 @@ void * run_infrared(void *voidData) {
 			digitalWrite(RELAY_2, RELAY_DISABLE);
 		}
 		if(key == 0x47) {
-			if ((fork_song_pid!=0)) {
+			if (fork_song_pid!=0) {
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
@@ -356,7 +356,7 @@ int main(int argc, char* argv[]) {
 		if (play_song_secs >= 0) {
 
 			// KILL OLD PROCESS
-			if ((fork_song_pid!=0) {
+			if (fork_song_pid!=0) {
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
@@ -387,7 +387,7 @@ int main(int argc, char* argv[]) {
 		if (play_song_secs==PLAY_REMINDER) {
 
 			// KILL OLD PROCESS
-			if ((fork_song_pid!=0) {
+			if (fork_song_pid!=0) {
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
@@ -421,13 +421,12 @@ int main(int argc, char* argv[]) {
 
 			fprintf(stderr, "Trying to stop alarm\n");
 
-		  	if (pthread_kill(current_thread,0) == 0) {
-				pthread_kill(current_thread, SIGTERM);
-				current_thread = 0;
-		    } else {
-				fprintf(stderr, "thread do not exists\n");
-		    }
-
+			if (kill(fork_song_pid,0) == 0) {
+				kill(fork_song_pid, SIGINT);
+				fork_song_pid = 0;
+			} else {
+				fprintf(stderr, "pid do not exists");
+			}
 		}
 
 
