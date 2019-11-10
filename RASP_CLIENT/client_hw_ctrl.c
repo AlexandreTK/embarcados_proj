@@ -269,7 +269,8 @@ void * run_infrared(void *voidData) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					fprintf(stderr, "NO error to kill\n");
+					sleep(1);
+					system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -374,7 +375,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					fprintf(stderr, "NO error to kill\n");
+					sleep(1);
+					system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -414,7 +416,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					fprintf(stderr, "NO error to kill\n");
+					sleep(1);
+					system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -454,7 +457,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 				}
-				fprintf(stderr, "NO error to kill\n");
+				sleep(1);
+				system("ps -a");
 				fork_song_pid = 0;
 			} else {
 				fprintf(stderr, "pid do not exists");
