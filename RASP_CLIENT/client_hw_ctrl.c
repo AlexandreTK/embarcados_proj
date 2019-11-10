@@ -53,14 +53,14 @@ pid_t fork_song_pid = 0;
 
 
 
-void  SIGINT_fork_handler(int sig) {
+void  SIGTERM_fork_handler(int sig) {
 	fprintf(stderr, "Killing mplayer\n");
 	system("ps -a");
 	system("echo ------ ");
 	system("killall mplayer");
 	system("ps -a");
 	sleep(1);
-	fprintf(stderr, "(FORK) Exit from SIGINT\n");
+	fprintf(stderr, "(FORK) Exit from SIGTERM\n");
 	exit(0);
 }
 
@@ -265,7 +265,7 @@ void * run_infrared(void *voidData) {
 				fprintf(stderr, "Stopping alarm pid %d from IR\n", fork_song_pid);
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
-					while( kill(fork_song_pid, SIGINT) != 0 ) {
+					while( kill(fork_song_pid, SIGTERM) != 0 ) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
@@ -370,7 +370,7 @@ int main(int argc, char* argv[]) {
 			if (fork_song_pid!=0) {
 				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
-					while( kill(fork_song_pid, SIGINT) != 0 ) {
+					while( kill(fork_song_pid, SIGTERM) != 0 ) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
@@ -386,8 +386,8 @@ int main(int argc, char* argv[]) {
 		    if (fork_song_pid == 0) {
 				sleep(play_song_secs);
 				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
-				if (signal(SIGINT, SIGINT_fork_handler) == SIG_ERR) {
-					fprintf(stderr, "SIGINT install error\n");
+				if (signal(SIGTERM, SIGTERM_fork_handler) == SIG_ERR) {
+					fprintf(stderr, "SIGTERM install error\n");
 					exit(1);
 				}
 
@@ -410,7 +410,7 @@ int main(int argc, char* argv[]) {
 			if (fork_song_pid!=0) {
 				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
-					while( kill(fork_song_pid, SIGINT) != 0 ) {
+					while( kill(fork_song_pid, SIGTERM) != 0 ) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
@@ -425,8 +425,8 @@ int main(int argc, char* argv[]) {
 			fork_song_pid = fork();
 			if (fork_song_pid == 0) {
 				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, REMINDER_PATH, NULL);
-				if (signal(SIGINT, SIGINT_fork_handler) == SIG_ERR) {
-					fprintf(stderr, "SIGINT install error\n");
+				if (signal(SIGTERM, SIGTERM_fork_handler) == SIG_ERR) {
+					fprintf(stderr, "SIGTERM install error\n");
 					exit(1);
 				}
 
@@ -450,7 +450,7 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr, "Stopping alarm pid %d from SERVER\n", fork_song_pid);
 
 			if (kill(fork_song_pid,0) == 0) {
-				while( kill(fork_song_pid, SIGINT) != 0 ) {
+				while( kill(fork_song_pid, SIGTERM) != 0 ) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 				}
