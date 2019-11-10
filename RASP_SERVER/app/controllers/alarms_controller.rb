@@ -94,6 +94,6 @@ class AlarmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def alarm_params
-      params.require(:alarm).permit(:hour, :min, :repeat_monday, :repeat_tuesday, :repeat_wednesday, :repeat_thursday, :repeat_friday, :repeat_saturday, :repeat_sunday)
+      params.require(:alarm).permit(:hour, :min, :repeat_monday, :repeat_tuesday, :repeat_wednesday, :repeat_thursday, :repeat_friday, :repeat_saturday, :repeat_sunday, :reminder)
     end
 end

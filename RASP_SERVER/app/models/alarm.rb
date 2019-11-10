@@ -2,6 +2,7 @@ class Alarm < ApplicationRecord
 
 
 	def self.should_alarm_go_off(request_url)
+		is_reminder = false
 		@setting = Setting.first
 		timezone = @setting.timezone_hours_diff
 		current_time = Time.now.utc + timezone.hours
@@ -37,13 +38,27 @@ class Alarm < ApplicationRecord
 
 		if alarm.count > 0
 			alarm_should_go_off = true
+
+			alarm.each do |a|
+				if a.reminder == true	
+					is_reminder = true
+				else 
+					is_reminder = false
+				end
+			end
 		end
 
 		alarm = Alarm.where(hour: current_hour, min:current_min).where( "#{week_day_string}": false ).where('created_at > ?', 24.hours.ago)
 		
 		if alarm.count > 0
 			alarm_should_go_off = true
+		
 			alarm.each do |a|
+				if a.reminder == true	
+					is_reminder = true
+				else 
+					is_reminder = false
+				end
 				a.destroy
 			end
 		end
@@ -91,6 +106,11 @@ class Alarm < ApplicationRecord
 					str_return = "-1,-2,"
 				end
 			end
+		end
+
+
+		if is_reminder == true	
+			str_return = "-1,-10,"
 		end
 
 		str_return = str_return + audio_url

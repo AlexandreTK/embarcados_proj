@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_26_220801) do
+ActiveRecord::Schema.define(version: 2019_11_10_220754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_10_26_220801) do
     t.boolean "repeat_sunday"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "reminder"
   end
 
   create_table "settings", force: :cascade do |t|
