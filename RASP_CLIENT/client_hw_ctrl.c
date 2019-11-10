@@ -256,6 +256,7 @@ void * run_infrared(void *voidData) {
 		}
 		if(key == 0x47) {
 			if (fork_song_pid!=0) {
+				fprintf(stderr, "Trying to stop alarm from IR\n");
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
@@ -357,7 +358,7 @@ int main(int argc, char* argv[]) {
 
 			// KILL OLD PROCESS
 			if (fork_song_pid!=0) {
-				//printf("Stopping alarm\n");
+				printf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
 					fork_song_pid = 0;
@@ -376,7 +377,7 @@ int main(int argc, char* argv[]) {
 				while(true) {
 					system(song_to_play_command);
 
-					sleep(30);
+					sleep(5);
 				}
 
 				return 0;
@@ -388,7 +389,7 @@ int main(int argc, char* argv[]) {
 
 			// KILL OLD PROCESS
 			if (fork_song_pid!=0) {
-				//printf("Stopping alarm\n");
+				printf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
 					fork_song_pid = 0;
@@ -419,7 +420,7 @@ int main(int argc, char* argv[]) {
 
 		if (play_song_secs==CANCEL_SONG) {
 
-			fprintf(stderr, "Trying to stop alarm\n");
+			fprintf(stderr, "Trying to stop alarm from SERVER\n");
 
 			if (kill(fork_song_pid,0) == 0) {
 				kill(fork_song_pid, SIGINT);
