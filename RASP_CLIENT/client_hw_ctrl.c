@@ -52,13 +52,14 @@ pid_t fork_song_pid = 0;
 //*******************************************
 
 
-/*
-void  SIGINT_handler(int sig)
-{
-	printf("Exit from SIGINT\n");
+
+void  SIGINT_fork_handler(int sig) {
+	printf("(FORK) Exit from SIGINT\n");
+	system("ps")
+	printf("(FORK) Exit from SIGINT\n");
 	exit(0);
 }
-*/
+
 
 //************* SERVER CODE ***************
 struct url_data {
@@ -372,6 +373,10 @@ int main(int argc, char* argv[]) {
 		    if (fork_song_pid == 0) {
 				sleep(play_song_secs);
 				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
+				if (signal(SIGINT, SIGINT_fork_handler) == SIG_ERR) {
+					fprintf(stderr, "SIGINT install error\n");
+					exit(1);
+				}
 				
 				char song_to_play_command[200];
 				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, song_to_play_path);
@@ -402,7 +407,10 @@ int main(int argc, char* argv[]) {
 			fork_song_pid = fork();
 			if (fork_song_pid == 0) {
 				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, REMINDER_PATH, NULL);
-
+				if (signal(SIGINT, SIGINT_fork_handler) == SIG_ERR) {
+					fprintf(stderr, "SIGINT install error\n");
+					exit(1);
+				}
 
 				char song_to_play_command[200];
 				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, REMINDER_PATH);
