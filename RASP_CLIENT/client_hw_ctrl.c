@@ -55,7 +55,10 @@ pid_t fork_song_pid = 0;
 
 void  SIGINT_fork_handler(int sig) {
 	fprintf(stderr, "Killing mplayer\n");
+	system("ps -a");
+	system("echo ------ ");
 	system("killall mplayer");
+	system("ps -a");
 	sleep(1);
 	fprintf(stderr, "(FORK) Exit from SIGINT\n");
 	exit(0);
@@ -418,6 +421,7 @@ int main(int argc, char* argv[]) {
 				char song_to_play_command[200];
 				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, REMINDER_PATH);
 				while(true) {
+
 					system(song_to_play_command);
 
 					sleep(NEXT_ALARM_DELAY);
