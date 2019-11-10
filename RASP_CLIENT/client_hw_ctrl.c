@@ -54,8 +54,9 @@ pid_t fork_song_pid = 0;
 
 
 void  SIGINT_fork_handler(int sig) {
-	fprintf(stderr, "(FORK) Exit from SIGINT\n");
-	system("ps");
+	fprintf(stderr, "Killing mplayer\n");
+	system("killall mplayer");
+	sleep(1);
 	fprintf(stderr, "(FORK) Exit from SIGINT\n");
 	exit(0);
 }
@@ -369,6 +370,7 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
+
 		    fork_song_pid = fork();
 		    if (fork_song_pid == 0) {
 				sleep(play_song_secs);
@@ -403,6 +405,7 @@ int main(int argc, char* argv[]) {
 					fprintf(stderr, "pid do not exists");
 				}
 			}
+
 
 			fork_song_pid = fork();
 			if (fork_song_pid == 0) {
