@@ -259,7 +259,7 @@ void * run_infrared(void *voidData) {
 		}
 		if(key == 0x47) {
 			if (fork_song_pid!=0) {
-				fprintf(stderr, "Trying to stop alarm from IR\n");
+				fprintf(stderr, "Stopping alarm pid %d from IR\n", fork_song_pid);
 				//printf("Stopping alarm\n");
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
@@ -431,8 +431,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (play_song_secs==CANCEL_SONG) {
-
-			fprintf(stderr, "Trying to stop alarm from SERVER\n");
+			fprintf(stderr, "Stopping alarm pid %d from SERVER\n", fork_song_pid);
 
 			if (kill(fork_song_pid,0) == 0) {
 				kill(fork_song_pid, SIGINT);
