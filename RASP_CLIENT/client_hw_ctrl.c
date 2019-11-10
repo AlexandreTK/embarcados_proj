@@ -359,13 +359,6 @@ int main(int argc, char* argv[]) {
 
 
 
-
-
-
-		if (play_song_secs >= 0) {
-			play_song_secs = PLAY_REMINDER;
-		}
-
 		if (play_song_secs >= 0) {
 
 			// KILL OLD PROCESS
