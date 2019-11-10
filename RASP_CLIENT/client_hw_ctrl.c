@@ -32,7 +32,7 @@ pid_t fork_song_pid = 0;
 //*******************************************
 #define CANCEL_SONG -2
 #define PLAY_REMINDER -10
-#define NEXT_ALARM_DELAY 5
+#define NEXT_ALARM_DELAY 20
 
 
 //************* MOTOR DEFINITION ***************
@@ -54,12 +54,13 @@ pid_t fork_song_pid = 0;
 
 
 void  SIGTERM_fork_handler(int sig) {
+	//system("ps -a");
+	//system("echo ------ ");
 	fprintf(stderr, "Killing mplayer\n");
-	system("ps -a");
-	system("echo ------ ");
 	system("killall mplayer");
-	system("ps -a");
-	sleep(1);
+	
+	sleep(2);
+	//system("ps -a");
 	fprintf(stderr, "(FORK) Exit from SIGTERM\n");
 	exit(0);
 }
@@ -269,8 +270,8 @@ void * run_infrared(void *voidData) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					sleep(1);
-					system("ps -a");
+					//sleep(2);
+					//system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -375,8 +376,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					sleep(1);
-					system("ps -a");
+					//sleep(2);
+					//system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -416,8 +417,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 					}
-					sleep(1);
-					system("ps -a");
+					//sleep(2);
+					//system("ps -a");
 					fork_song_pid = 0;
 				} else {
 					fprintf(stderr, "pid do not exists");
@@ -457,8 +458,8 @@ int main(int argc, char* argv[]) {
 						fprintf(stderr, "error to kill\n");
 						sleep(2);
 				}
-				sleep(1);
-				system("ps -a");
+				//sleep(2);
+				//system("ps -a");
 				fork_song_pid = 0;
 			} else {
 				fprintf(stderr, "pid do not exists");
