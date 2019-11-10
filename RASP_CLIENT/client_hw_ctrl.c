@@ -358,7 +358,7 @@ int main(int argc, char* argv[]) {
 
 			// KILL OLD PROCESS
 			if (fork_song_pid!=0) {
-				printf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
+				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
 					fork_song_pid = 0;
@@ -389,7 +389,7 @@ int main(int argc, char* argv[]) {
 
 			// KILL OLD PROCESS
 			if (fork_song_pid!=0) {
-				printf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
+				fprintf(stderr, "Stopping alarm pid %d \n", fork_song_pid);
 				if (kill(fork_song_pid,0) == 0) {
 					kill(fork_song_pid, SIGINT);
 					fork_song_pid = 0;
