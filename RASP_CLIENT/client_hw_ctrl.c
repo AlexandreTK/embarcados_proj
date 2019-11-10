@@ -54,9 +54,9 @@ pid_t fork_song_pid = 0;
 
 
 void  SIGINT_fork_handler(int sig) {
-	printf("(FORK) Exit from SIGINT\n");
-	system("ps")
-	printf("(FORK) Exit from SIGINT\n");
+	fprintf(stderr, "(FORK) Exit from SIGINT\n");
+	system("ps");
+	fprintf(stderr, "(FORK) Exit from SIGINT\n");
 	exit(0);
 }
 
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
 					fprintf(stderr, "SIGINT install error\n");
 					exit(1);
 				}
-				
+
 				char song_to_play_command[200];
 				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, song_to_play_path);
 				while(true) {
