@@ -26,12 +26,8 @@ static const char MUSIC_PLAYER_PATH[] = "/usr/local/bin/mplayer";
 static const char MUSIC_PLAYER_PATH[] = "/usr/bin/mplayer";
 #endif
 
-static char REMINDER_PATH[] = "./telegram_bot/voice.ogg";
-
 pid_t fork_song_pid = 0;
 //*******************************************
-#define CANCEL_SONG -2
-#define PLAY_REMINDER -10
 
 
 //************* MOTOR DEFINITION ***************
@@ -285,9 +281,9 @@ int main(int argc, char* argv[]) {
 	// SERVER
 	//pid_t fork_song_pid = 0;
 	char* data = NULL;
-	int play_song_secs;
-	int move_motor_secs;
-	char song_to_play_path[200];
+    	int play_song_secs;
+    	int move_motor_secs;
+    	char song_to_play_path[200];
 	// MOTOR
 	pthread_t thread_motor;
 	// INFRARED
@@ -342,96 +338,24 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-
-
-
-
-
-
-
-		if (play_song_secs >= 0) {
-			play_song_secs = PLAY_REMINDER;
-		}
-
-		if (play_song_secs >= 0) {
-
-			// KILL OLD PROCESS
-			if ((fork_song_pid!=0) {
-				//printf("Stopping alarm\n");
-				if (kill(fork_song_pid,0) == 0) {
-					kill(fork_song_pid, SIGINT);
-					fork_song_pid = 0;
-				} else {
-					fprintf(stderr, "pid do not exists");
-				}
-			}
-
-		    fork_song_pid = fork();
-		    if (fork_song_pid == 0) {
-				sleep(play_song_secs);
-				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
-				
-				char song_to_play_command[200];
-				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, song_to_play_path);
-				while(true) {
-					system(song_to_play_command);
-
-					sleep(30);
-				}
-
-				return 0;
-			}
-			
-		}
-
-		if (play_song_secs==PLAY_REMINDER) {
-
-			// KILL OLD PROCESS
-			if ((fork_song_pid!=0) {
-				//printf("Stopping alarm\n");
-				if (kill(fork_song_pid,0) == 0) {
-					kill(fork_song_pid, SIGINT);
-					fork_song_pid = 0;
-				} else {
-					fprintf(stderr, "pid do not exists");
-				}
-			}
-
+        if (play_song_secs >= 0) {
 			fork_song_pid = fork();
 			if (fork_song_pid == 0) {
-				//execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, REMINDER_PATH, NULL);
-
-
-				char song_to_play_command[200];
-				sprintf(song_to_play_command, "%s %s", MUSIC_PLAYER, REMINDER_PATH);
-				while(true) {
-					system(song_to_play_command);
-
-					sleep(30);
-				}
-
-				
-
+				sleep(play_song_secs);
+				execl(MUSIC_PLAYER_PATH, MUSIC_PLAYER, song_to_play_path, NULL);
 				return 0;
-		    }
-		    
-		}
-
-		if (play_song_secs==CANCEL_SONG) {
-
-			fprintf(stderr, "Trying to stop alarm\n");
-
-		  	if (pthread_kill(current_thread,0) == 0) {
-				pthread_kill(current_thread, SIGTERM);
-				current_thread = 0;
-		    } else {
-				fprintf(stderr, "thread do not exists\n");
-		    }
-
-		}
-
-
-
+			}
+		} else {
+			if ((play_song_secs==-2) && (fork_song_pid!=0)) {
+				//printf("Stopping alarm\n");
+				if (kill(fork_song_pid,0) == 0) {
+					kill(fork_song_pid, SIGINT);
+					fork_song_pid = 0;
+				} else {
+					fprintf(stderr, "pid do not exists");
+				}
+			}
+        }
 
 		sleep(SECONDS_NEXT_REQUEST);
 	}
