@@ -1,0 +1,13 @@
+[Unit]
+Description=Run Clock Project
+Requires=docker.service
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/Desktop/embarcados_proj/start_all.sh
+RemainAfterExit=yes
+ExecStop=/home/pi/Desktop/embarcados_proj/stop_all.sh
+
+[Install]
+WantedBy=multi-user.target
